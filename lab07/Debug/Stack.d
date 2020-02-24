@@ -1,0 +1,1 @@
+Stack.o: ../Stack.cpp

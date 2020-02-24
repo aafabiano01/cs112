@@ -1,0 +1,35 @@
+12:51:43 **** Incremental Build of configuration Debug for project lab04final ****
+make all 
+Building file: ../Application.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"Application.d" -MT"Application.o" -o "Application.o" "../Application.cpp"
+Finished building: ../Application.cpp
+ 
+Building file: ../Matrix.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"Matrix.d" -MT"Matrix.o" -o "Matrix.o" "../Matrix.cpp"
+Finished building: ../Matrix.cpp
+ 
+Building file: ../MatrixTester.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"MatrixTester.d" -MT"MatrixTester.o" -o "MatrixTester.o" "../MatrixTester.cpp"
+Finished building: ../MatrixTester.cpp
+ 
+Building file: ../VecTester.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"VecTester.d" -MT"VecTester.o" -o "VecTester.o" "../VecTester.cpp"
+Finished building: ../VecTester.cpp
+ 
+Building file: ../tester.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"tester.d" -MT"tester.o" -o "tester.o" "../tester.cpp"
+Finished building: ../tester.cpp
+ 
+Building target: lab04final
+Invoking: GCC C++ Linker
+g++  -o "lab04final"  ./Application.o ./Matrix.o ./MatrixTester.o ./VecTester.o ./tester.o   
+Finished building target: lab04final
+ 
+
+12:51:45 Build Finished. 0 errors, 0 warnings. (took 1s.822ms)
+

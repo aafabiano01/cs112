@@ -1,0 +1,118 @@
+/* Matrix.cpp defines Matrix class methods.
+ * Student Name:
+ * Date:
+ * Begun by: Joel Adams, for CS 112 at Calvin University.
+ */
+
+#include "Matrix.h"
+
+Matrix::Matrix() {
+	myRows = myColumns = 0;
+}
+Matrix::Matrix(unsigned rows, unsigned columns) {
+	myRows = rows;
+	myColumns = columns;
+	myVec.setSize(rows);
+	for (unsigned i = 0; i < rows; i++) {
+		myVec[i].setSize(columns);
+	}
+}
+//==
+const Vec<Item>& Matrix::operator[](unsigned index) const {
+	if (index >= myRows) {
+		throw range_error("bruh");
+	} else {
+		return myVec[index];
+	}
+}
+//=
+Vec<Item>& Matrix::operator[](unsigned index) {
+	if (index >= myRows) {
+		throw range_error("bruh");
+	} else {
+		return myVec[index];
+	}
+}
+const bool Matrix::operator==(const Matrix& m2) const {
+    if ( myRows != m2.getRows() || myColumns != m2.getColumns() ) {
+         return false;
+    } else {
+         return myVec == m2.myVec;
+    }
+}
+//operator !=
+const bool Matrix::operator!=(const Matrix& m2) const {
+	if ( myRows != m2.getRows() || myColumns != m2.getColumns() ) {
+		return true;
+	} else {
+		return myVec != m2.myVec;
+	}
+}
+//readFrom(istream)
+void Matrix::readFrom(istream& in) {
+	for (unsigned i = 0; i < myRows; i++) {
+		for (unsigned j = 0; j < myColumns; j++) {
+			in >> myVec[i][j];
+		}
+	}
+}
+//writeTo(string)
+void Matrix::writeTo(const string& fileName) const {
+	ofstream fout(fileName);
+	fout << myRows << "\t" << myColumns << endl;
+	for (unsigned i = 0; i < myRows; i++) {
+		for (unsigned f = 0; f < myRows; f++) {
+			fout << myVec[i][f] << "\t";
+		}
+		//writeTo(fout);
+		fout << "\n";
+	}
+	fout.close();
+}
+//operator+()
+Matrix Matrix::operator+(const Matrix& m2) const {
+	if ( myRows != m2.getRows() || myColumns != m2.getColumns() ) {
+		throw invalid_argument("bruh");
+	}
+	Matrix m3(myRows, myColumns);
+	for (unsigned i = 0; i < myRows; i++) {
+		for (unsigned j = 0; j < myColumns; j++) {
+			m3.myVec[i][j] = myVec[i][j] + m2.myVec[i][j];
+		}
+	}
+	return m3;
+}
+////readFrom File
+//void Matrix::readFrom(const string& fileName) {
+//	fstream in(fileName.c_str(), ios::in);
+//	unsigned inRows, inCols;
+//	in >> inRows >> inCols;
+//	myRows = inRows;
+//	myColumns = inCols;
+//	assert (myRows != 0);
+//	assert (myColumns != 0);
+//	for (unsigned i = 0; i < myRows; i++) {
+//		for (unsigned j = 0; j < myColumns; j++) {
+//			in >> myVec[i][j];
+//		}
+//	}
+//}
+//void Matrix::writeTo(ostream& out) const {
+//	for (unsigned i = 0; i < myRows; i++) {
+//		for (unsigned j = 0; j < myColumns; j++) {
+//			out << myVec[i][j];
+//		}
+//	}
+//}
+//Matrix Matrix::operator-(const Matrix& m2) const {
+//	if ( myRows != m2.getRows() || myColumns != m2.getColumns() ) {
+//		throw invalid_argument("bruh");
+//	}
+//	Matrix m3(myRows, myColumns);
+//	for (unsigned i = 0; i < myRows; i++) {
+//		for (unsigned j = 0; j < myColumns; j++) {
+//			m3.myVec[i][j] = myVec[i][j] - m2.myVec[i][j];
+//		}
+//	}
+//	return m3;
+//}

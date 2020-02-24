@@ -1,0 +1,6 @@
+18:09:57 **** Auto Build of configuration Default for project lab10 ****
+make all 
+make: Nothing to be done for 'all'.
+
+18:09:57 Build Finished. 0 errors, 0 warnings. (took 535ms)
+

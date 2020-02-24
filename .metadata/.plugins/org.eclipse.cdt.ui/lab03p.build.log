@@ -1,0 +1,6 @@
+12:25:49 **** Auto Build of configuration Debug for project lab03p ****
+make all 
+make: Nothing to be done for 'all'.
+
+12:25:49 Build Finished. 0 errors, 0 warnings. (took 510ms)
+

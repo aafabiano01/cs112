@@ -1,0 +1,177 @@
+/* Vec.cpp defines the methods for Vec, a simple vector class.
+ * Student Name:
+ * Date:
+ * Begun by: Joel C. Adams, for CS 112 at Calvin University.
+ */
+ 
+#include "Vec.h"
+#include <cstdlib>
+#include <stdexcept>
+#include <fstream>
+#include <iostream>
+#include <string>
+using namespace std;
+
+Vec::Vec(){
+	mySize = 0;
+	myArray = NULL;
+}
+
+Vec::~Vec() {
+	delete [] myArray;
+	mySize = 0;
+	myArray = NULL;
+}
+
+Vec::Vec(unsigned size) {
+	mySize = size;
+	if (size > 0) {
+		Item* newMyArray = nullptr;
+		delete[] newMyArray;
+		newMyArray = new Item[size]();
+		myArray = newMyArray;
+	} else {
+		myArray = NULL;
+	}
+}
+
+Vec::Vec(const Vec& original) {
+	mySize = original.mySize;
+	if (original.mySize > 0) {
+		Item* newMyArray = nullptr;
+		delete[] newMyArray;
+		newMyArray = new Item[original.mySize]();
+		for (unsigned i = 0; i < original.mySize; ++i) {
+			newMyArray[i] = original.myArray[i];
+		}
+		myArray = newMyArray;
+	} else {
+		myArray = NULL;
+	}
+}
+
+Vec& Vec::operator=(const Vec& original) {
+	if (myArray == original.myArray) {
+		return *this;
+	}
+	delete [] myArray;
+	mySize = original.mySize;
+	if (original.mySize > 0) {
+		Item* newMyArray = nullptr;
+		delete[] newMyArray;
+		newMyArray = new Item[original.mySize]();
+		for (unsigned i = 0; i < original.mySize; ++i) {
+			newMyArray[i] = original.myArray[i];
+		}
+		myArray = newMyArray;
+	} else {
+		myArray = NULL;
+	}
+	return *this;
+}
+
+unsigned Vec::getSize() const {
+	return mySize;
+}
+
+void Vec::setItem(unsigned index, const Item& it) {
+	if (myArray == NULL) {
+		throw range_error("bruh");
+	} else if (index >= mySize) {
+		throw range_error("bruh");
+	} else {
+		myArray[index] = it;
+	}
+}
+
+Item Vec::getItem(unsigned index) const {
+	if (myArray == NULL) {
+		throw range_error("bruh");
+	} else if (index >= mySize) {
+		throw range_error("bruh");
+	} else {
+		return myArray[index];
+	}
+}
+
+void Vec::setSize(unsigned newSize) {
+	Item * arrayThatCanExpand = nullptr;
+	delete [] arrayThatCanExpand;
+	arrayThatCanExpand = new Item[newSize];
+	if (newSize == 0)
+	{
+		delete [] myArray;
+		myArray = 0;
+		mySize = 0;
+		return;
+	} else if (newSize == mySize) {
+		return;
+	} else if (newSize < mySize) {
+		for (unsigned i = 0; i < newSize; i++) {
+			arrayThatCanExpand[i] = myArray[i];
+		}
+	} else if (newSize > mySize) {
+		for (unsigned i = 0; i < mySize; i++) {
+			arrayThatCanExpand[i] = myArray[i];
+		}
+		for (unsigned i = mySize; i < newSize; i++) {
+			arrayThatCanExpand[i] = 0;
+		}
+	}
+	mySize = newSize;
+	delete [] myArray;
+	myArray = arrayThatCanExpand;
+}
+
+bool Vec::operator==(const Vec& v2) const {
+	if (mySize != v2.mySize) {
+		return false;
+	}
+	for (unsigned i = 0; i < v2.getSize(); ++i) {
+		if (myArray[i] != v2.myArray[i])
+			return false;
+	}
+	return true;
+}
+
+void Vec::writeTo(ostream& out) const {
+		for (unsigned i = 0; i < mySize; i++) {
+			out << myArray[i] << " ";
+		}
+		out << endl;
+}
+
+void Vec::readFrom(istream& in) {
+	string turnToItem;
+//	Item * arrayThatCanExpand = nullptr;
+//	delete [] arrayThatCanExpand;
+//	arrayThatCanExpand = new Item[ ];
+	for (unsigned i = 0; i < mySize; i++) {
+//		getline(in, turnToItem);
+//		double turn2Item = atof(turnToItem.c_str());
+//		myArray[i] = turn2Item;
+		double value;
+		in >> value;
+		myArray[i] = value;
+	}
+}
+
+Item Vec::operator[](unsigned index) {
+	if (myArray == NULL) {
+		throw range_error("bruh");
+	} else if (index >= mySize) {
+		throw range_error("bruh");
+	} else {
+		return myArray[index];
+	}
+}
+
+//void Vec::operator[](unsigned index, ) {
+//	if (myArray == NULL) {
+//		throw range_error("bruh");
+//	} else if (index >= mySize) {
+//		throw range_error("bruh");
+//	} else {
+//		myArray[index] =
+//	}
+//}

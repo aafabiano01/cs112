@@ -1,0 +1,955 @@
+Script started on 2019-09-16 21:21:04-0400
+]0;aaf25@gold29: ~/cs112/lab01[01;32maaf25@gold29[00m:[01;34m~/cs112/lab01[00m$ ls
+Application.cpp  PlayList.cpp        saved.txt       songTester.h
+Application.h    PlayList.h          Song.cpp        testSongOutput.txt
+[0m[01;34mDebug[0m            PlayListTester.cpp  Song.h          testSongs.txt
+main.cpp         PlayListTester.h    songTester.cpp  typescript
+]0;aaf25@gold29: ~/cs112/lab01[01;32maaf25@gold29[00m:[01;34m~/cs112/lab01[00m$ cat main.cop  pp Song.h  Song.cpp[1P[1@h [1P Song.cpp SongTester.h SongTester .cpp PlayList.h PlayList.cp  p [K[A]0;aaf25@gold29: ~/cs112/lab01[01;32maaf25@gold29[00m:[01;34m~/cs112/lab01[00m$ cat main.cpp Song.h Song.cpp SongTester.h SongTester.cpp PlayList.h PlayList.cpp [K]0;aaf25@gold29: ~/cs112/lab01[01;32maaf25@gold29[00m:[01;34m~/cs112/lab01[00m$ cat main.cpp Song.h Song.cpp SongTester.h SongTester
+.cpp PlayList.h PlayList.cpp PlayListTeset  ter.h PlayList. Tester.cpp [K[A]0;aaf25@gold29: ~/cs112/lab01[01;32maaf25@gold29[00m:[01;34m~/cs112/lab01[00m$ cat main.cpp Song.h Song.cpp SongTester.h SongTester.cpp PlayList.h PlayList.cpp PlayListTester.h PlayListTester.cpp [K]0;aaf25@gold29: ~/cs112/lab01[01;32maaf25@gold29[00m:[01;34m~/cs112/lab01[00m$ cat main.cpp Song.h Song.cpp SongTester.h SongTester
+.cpp PlayList.h PlayList.cpp PlayListTester.h PlayListTester.cpp     testSongs.txt t estSongOutp Put   put.txt Application.h appl    Application.cpp saved.txt
+/*
+ * main.cpp
+ *
+ *  Created on: Sep 10, 2019
+ *      Author: Alex Fabiano
+ *      Lab01 in cs112 at Calvin U
+ */
+
+#include "songTester.h"
+#include "PlayListTester.h"
+#include "Application.h"
+
+	int main() {
+		SongTester sTester;
+		sTester.runTests();
+		PlayListTester plTester;
+		plTester.runTests();
+		Application app;
+		app.runApp();
+	}
+
+
+/*
+ * song.h
+ *
+ *  Created on: Sep 10, 2019
+ *      Author: Alex Fabiano
+ *      Lab01 in cs112 at Calvin U
+ */
+
+#ifndef SONG_H_
+#define SONG_H_
+#include <string>
+using namespace std;
+
+class Song {
+public:
+	Song();
+	Song(const string& title, const string& artist, unsigned year);
+	string getTitle() const;
+	string getArtist() const;
+	unsigned getYear() const;
+	void readFrom(istream& in);
+	void writeTo(ostream& out) const;
+	bool operator==(const Song& song2) const;
+private:
+	string myTitle;
+	string myArtist;
+	unsigned myYear;
+};
+
+#endif /* SONG_H_ */
+/*
+ * song.cpp
+ *
+ *  Created on: Sep 10, 2019
+ *      Author: Alex Fabiano
+ *      Lab01 in cs112 at Calvin U
+ */
+
+#include <cstdlib>
+#include <iostream>
+#include "Song.h"
+
+   /* Song default constructor
+    * Postcondition: myTitle and myArtist are empty strings
+    *            && myYear == 0.
+    */
+   Song::Song() {
+      myTitle = myArtist = "";
+      myYear = 0;
+   }
+
+   /* getter method for myTitle
+    * Return: myTitle
+    */
+   string Song::getTitle() const {
+      return myTitle;
+   }
+
+   /* getter method for myArtist
+    * Return: myArtist
+    */
+   string Song::getArtist() const {
+      return myArtist;
+   }
+
+   /* getter method for myYear
+    * Return: myYear
+    */
+   unsigned Song::getYear() const {
+      return myYear;
+   }
+   /* Explicit constructor
+    * @param: title, a string
+    * @param: artist, a string
+    * @year: an unsigned int.
+    * Postcondition: myTitle == title &&
+    *                myArtist == artist &&
+    *                myYear == year.
+    */
+   Song::Song(const string& title, const string& artist, unsigned year) {
+      myTitle = title;
+      myArtist = artist;
+      myYear = year;
+   }
+   /* Song input method...
+    * @param: in, an istream
+    * Precondition: in contains the title, artist, and year data for a Song.
+    * Postcondition: the title, artist, and year data have been read from in &&
+    *                 myTitle == title &&
+    *                 myArtist == artist &&
+    *                 myYear == year.
+    */
+   void Song::readFrom(istream& in) {
+      getline(in, myTitle);
+      getline(in, myArtist);
+      string yearString;
+      getline(in, yearString);
+      myYear = atoi( yearString.c_str() );
+   }
+   /* Song output...
+    * @param: out, an ostream
+    * Postcondition: out contains myTitle, a newline,
+    *                             myArtist, a newline,
+    *                             myYear, and a newline.
+    */
+   void Song::writeTo(ostream& out) const {
+      out << myTitle << '\n'
+          << myArtist << '\n'
+          << myYear  << '\n';
+   }
+   //operator == being defined for Song allows us to make comparisons with Songs.
+   //param: Song, a Song object
+   bool Song::operator==(const Song& song2) const {
+	   return (myTitle == song2.getTitle()
+			   && myArtist == song2.getArtist()
+			   && myYear == song2.getYear() );
+   }
+
+cat: SongTester.h: No such file or directory
+cat: SongTester.cpp: No such file or directory
+/*
+ * playlist.h
+ *
+ *  Created on: Sep 10, 2019
+ *      Author: Alex Fabiano
+ *      Lab01 in cs112 at Calvin U
+ */
+
+#ifndef PLAYLIST_H_
+#define PLAYLIST_H_
+
+#include <string>
+using namespace std;
+#include "Song.h"
+#include <vector>	//STL Vector
+
+
+
+class PlayList {
+public:
+	PlayList(const string& fileName);
+	unsigned getNumSongs() const;
+	vector<Song> searchByArtist(const string& artist) const;
+	vector<Song> searchByYear(unsigned year);
+	vector<Song> searchByTitlePhrase(const string& phrase);
+	void addSong(const Song& newSong);
+	void removeSong(const Song& aSong);
+	void save() const;
+private:
+	vector<Song> mySongs;
+};
+
+#endif /* PLAYLIST_H_ */
+/*
+ * playlist.cpp
+ *
+ *  Created on: Sep 10, 2019
+ *      Author: Alex Fabiano
+ *      Lab01 in cs112 at Calvin U
+ */
+
+/* PlayList.cpp ...
+ * ...
+ */
+
+#include "PlayList.h"
+#include <fstream>      // ifstream
+#include <cassert>      // assert()
+using namespace std;
+
+//any changes you made to the mySongs playlist will now be changed on a text file named saved.
+//no parameters
+void PlayList::save() const {
+	ofstream fout("saved.txt");
+	for (unsigned i = 0; i < mySongs.size(); i++) {
+		Song s1 = mySongs[i];
+		s1.writeTo(fout);
+		fout << "---\n";
+	}
+	fout.close();
+
+}
+/* PlayList constructor
+ * @param: fileName, a string
+ * Precondition: fileName contains the name of a playlist file.
+ */
+PlayList::PlayList(const string& fileName) {
+   // open a stream to the playlist file
+   ifstream fin( fileName.c_str() );
+   assert( fin.is_open() );
+
+   // read each song and append it to mySongs
+   Song s;
+   string separator;
+   while (true) {
+       s.readFrom(fin);
+       if ( !fin ) { break; }
+       getline(fin, separator);
+       mySongs.push_back(s);
+   }
+
+   // close the stream
+   fin.close();
+}
+/* Retrieve length of the playlist
+ * Return: the number of songs in the playlist.
+ */
+unsigned PlayList::getNumSongs() const {
+   return mySongs.size();
+}
+vector<Song> PlayList::searchByYear(unsigned year) {
+	  vector<Song> v;
+
+	   for (unsigned i = 0; i < mySongs.size(); i++) {
+	      if ( mySongs[i].getYear() == year ) {
+	         v.push_back( mySongs[i] );
+	      }
+	   }
+
+	   return v;
+	}
+//send a string to this method and receive a vector filled with any songs that contain
+//that phrase in their title
+//param: title phrase, a string
+vector<Song> PlayList::searchByTitlePhrase(const string& phrase) {
+	vector<Song> v;
+	for (unsigned i = 0; i < mySongs.size(); i++) {
+		if ( mySongs[i].getTitle().find(phrase) != string::npos) {
+			v.push_back( mySongs[i] );
+	    }
+	}
+	return v;
+}
+//send this method a song, and it will tag it on to the back of mySongs, but return nothing
+//param: Song, a Song object
+void PlayList::addSong(const Song& newSong){
+	mySongs.push_back( newSong );
+}
+/* Search by artist
+ * @param: artist, a string.
+ * Return: a vector containing all the Songs in mySongs by artist.
+ */
+vector<Song> PlayList::searchByArtist(const string& artist) const {
+	vector<Song> v;
+	for (unsigned i = 0; i < mySongs.size(); i++) {
+		if ( mySongs[i].getArtist().find(artist) != string::npos ) {
+			v.push_back( mySongs[i] );
+		}
+    }
+    return v;
+}
+//send this method a song, and it will search for and remove that song from mySongs, returns nothing
+//param: Song, a Song object
+void PlayList::removeSong(const Song& aSong) {
+	for (unsigned i = 0; i <= mySongs.size(); ++i) {
+		if (aSong == mySongs[i]) {
+			mySongs.erase(mySongs.begin() + i);
+		}
+	}
+}
+
+
+
+
+
+/*
+ * playlistTester.h
+ *
+ *  Created on: Sep 10, 2019
+ *      Author: Alex Fabiano
+ *      Lab01 in cs112 at Calvin U
+ */
+
+#ifndef PLAYLISTTESTER_H_
+#define PLAYLISTTESTER_H_
+
+#include <string>
+using namespace std;
+
+class PlayListTester {
+public:
+    void runTests();
+    void testConstructors();
+    void testSearchByArtist();
+    void testSearchByYear();
+    void testSearchByPhrase();
+    void testAddSong();
+    void testRemoveSong();
+    void testSave();
+};
+
+#endif /* PLAYLISTTESTER_H_ */
+/*
+ * playlistTester.cpp
+ *
+ *  Created on: Sep 10, 2019
+ *      Author: Alex Fabiano
+ *      Lab01 in cs112 at Calvin U
+ */
+
+#include <iostream>
+#include <cassert>
+#include "PlayListTester.h"
+using namespace std;
+#include "PlayList.h"
+
+
+void PlayListTester::runTests() {
+   cout << "\nTesting class PlayList..." << endl;
+   testConstructors();
+   testSearchByArtist();
+   testSearchByYear();
+   testSearchByPhrase();
+   testAddSong();
+   testRemoveSong();
+   testSave();
+   cout << "All tests passed!" << endl;
+}
+void PlayListTester::testConstructors() {
+   cout << "- constructors..." << flush;
+   PlayList pList("testSongs.txt");
+   assert( pList.getNumSongs() == 4 );
+   cout << " 0 " << flush;
+
+   cout << " Passed!" << endl;
+}
+void PlayListTester::testAddSong() {
+	cout << "- addSong()..." << flush;
+	Song s111("h", "h" , 8 );
+	PlayList toBeAddedTo("testSongs.txt");
+	vector<Song> searched = toBeAddedTo.searchByTitlePhrase("h");
+	assert (searched.size() == 0);
+	cout << " 0 " << flush;
+	toBeAddedTo.addSong(s111);
+	searched = toBeAddedTo.searchByTitlePhrase("h");
+	assert (searched.size() == 1);
+	cout << " 1 " << flush;
+	cout << " Passed! " << endl;
+}
+void PlayListTester::testRemoveSong() {
+	cout << "- removeSong()..." << flush;
+	Song s111("h", "h" , 8 );
+	PlayList toBeAddedTo("testSongs.txt");
+	vector<Song> searched = toBeAddedTo.searchByTitlePhrase("h");
+	assert (searched.size() == 0);
+	//verify playlist is empty
+	toBeAddedTo.addSong(s111);
+	searched = toBeAddedTo.searchByTitlePhrase("h");
+	assert (searched.size() == 1);
+	//verify playlist has the h song
+	toBeAddedTo.removeSong(s111);
+	searched = toBeAddedTo.searchByTitlePhrase("h");
+	assert (searched.size() == 0);
+	//verify the h song was removed
+	cout << " 0 " << flush;
+	cout << " Passed! " << endl;
+}
+void PlayListTester::testSave(){
+	cout << "- testSave()..." << flush;
+	PlayList pList("testSongs.txt");
+	PlayList savedList("saved.txt");
+	pList.save();
+	cout << " 0 " << flush;
+	vector<Song> songsContainingPhrase = savedList.searchByTitlePhrase("Call");
+	assert( songsContainingPhrase.size() == 1);
+	cout << " 1 " << flush;
+
+
+	cout << " Passed! " << endl;
+}
+void PlayListTester::testSearchByPhrase() {
+	cout << "- searchByTitlePhrase()..." << flush;
+	PlayList pList("testSongs.txt");
+	vector<Song> songsContainingPhrase = pList.searchByTitlePhrase("Call");
+	assert( songsContainingPhrase.size() == 1);
+	cout << " 0 " << flush;
+	songsContainingPhrase = pList.searchByTitlePhrase("Let");
+	assert( songsContainingPhrase.size() == 2);
+	cout << " 1 " << flush;
+	songsContainingPhrase = pList.searchByTitlePhrase("Irony");
+	assert( songsContainingPhrase.size() == 0);
+	cout << " 2 " << flush;
+
+	cout << " Passed! " << endl;
+}
+void PlayListTester::testSearchByYear() {
+	cout << "- searchByYear()..." << flush;
+	PlayList pList("testSongs.txt");
+
+	vector<Song> songsOfGivenYear = pList.searchByYear(2015);
+	assert( songsOfGivenYear.size() == 0);
+	//because there are no songs from 2015 in the testSongs.txt
+	cout << " 0 " << flush;
+	songsOfGivenYear = pList.searchByYear(2012);
+	assert( songsOfGivenYear.size() == 1);
+	//1 song from year 2012
+	cout << " 1 " << flush;
+	songsOfGivenYear = pList.searchByYear(1967);
+	assert( songsOfGivenYear.size() == 2);
+	//2 songs from year 1967
+	cout << " 2 " << flush;
+
+	cout << " Passed! " << endl;
+}
+void PlayListTester::testSearchByArtist() {
+   cout << "- searchByArtist()... " << flush;
+   // load a playlist with test songs
+   PlayList pList("testSongs.txt");
+
+   // empty case (0 artists)
+   vector<Song> searchResult = pList.searchByArtist("Cream");
+   assert( searchResult.size() == 0 );
+   cout << " 0 " << flush;
+
+   // case of 1 artist
+   searchResult = pList.searchByArtist("Baez");
+   assert( searchResult.size() == 1 );
+   assert( searchResult[0].getTitle() == "Let It Be" );
+   cout << " 1 " << flush;
+
+   // case of 2 artists
+   searchResult = pList.searchByArtist("Beatles");
+   assert( searchResult.size() == 2 );
+   assert( searchResult[0].getTitle() == "Let It Be" );
+   assert( searchResult[1].getTitle() == "Penny Lane" );
+   cout << " 2 " << flush;
+
+   cout << " Passed!" << endl;
+}
+
+
+Call Me Maybe
+Carly Rae Jepsen
+2012
+---
+Let It Be
+The Beatles
+1967
+---
+Let It Be
+Joan Baez
+1971
+---
+Penny Lane
+The Beatles
+1967
+---Badge
+Cream
+1969
+---
+Godzilla
+Blue Oyster Cult
+1977
+---
+Behind Blue Eyes
+The Who
+1971
+---
+/*
+ * Application.h
+ *
+ *  Created on: Sep 13, 2019
+ *      Author: Alex Fabiano
+ *      Lab01 in cs112 at Calvin U
+ */
+
+#ifndef APPLICATION_H_
+#define APPLICATION_H_
+
+
+class Application {
+public:
+	Application();
+	//virtual ~Application();
+	void runApp() const;
+};
+
+#endif /* APPLICATION_H_ */
+/*
+ * Application.cpp
+ *
+ *  Created on: Sep 13, 2019
+ *      Author: Alex Fabiano
+ *      Lab01 in cs112 at Calvin U
+ */
+
+#include "Application.h"
+#include "PlayList.h"
+#include <iostream>
+#include "Song.h"
+#include <string>
+#include <cassert>
+//#include "stdlib.h"
+
+Application::Application() {
+
+}
+void Application::runApp() const {
+	while (true){
+
+		string textInput;
+		PlayList pList("saved.txt");
+		vector<Song> v;
+		cout << "Welcome to the PlayList Manager! \n"
+				"Please enter: \n"
+				"1 - to search the playlist for songs by a given artist \n"
+				"2 - to search the playlist for songs from a given year \n"
+				"3 - to search the playlist for songs with a given phrase in their title \n"
+				"4 - to add a new song to the playlist \n"
+				"5 - to remove a song from the playlist \n"
+				"6 - to save the playlist \n"
+				"0 - to quit \n"
+				"--->" << flush;
+		unsigned userInput = 0;
+		cin >> userInput;
+		if (userInput == 1) {
+			cout << "Enter phrase to search for..." << endl;
+			cin.ignore();
+			getline (cin, textInput);
+			v = pList.searchByArtist(textInput);	//v is the playlist used to make sure that
+			if (v.size() > 0) {						//it doesnt loop over a vector of size 0
+				for (unsigned i = 0; i < v.size(); i++) {
+					Song s1 = v[i];
+					cout << s1.getTitle() << endl;
+					cout << s1.getArtist() << endl;
+					cout << s1.getYear() << endl;
+			}
+			}
+			else {
+				cout << "No songs by given artist." << endl;
+			}
+
+		}
+		else if (userInput == 2) {
+			cout << "Enter year to search for..." << endl;
+			unsigned valInput;
+			cin >> valInput;
+			while (!cin) {	//makes sure the given value is not a string.
+				cout << "Please enter number!" << endl;
+				cin.clear();
+				cin.ignore();
+				cin >> valInput;
+			}
+			v = pList.searchByYear(valInput);	//stops looping over empty vector
+			if (v.size() > 0 ) {
+				for (unsigned i = 0; i < v.size(); i++) {
+					Song s1 = v[i];
+					cout << s1.getTitle() << endl;
+					cout << s1.getArtist() << endl;
+					cout << s1.getYear() << endl;
+			}
+			}
+			else {
+				cout << "No songs from given year." << endl;
+			}
+
+		}
+		else if (userInput == 3) {
+			cout << "Enter phrase to search for..." << endl;
+			cin.ignore();
+			getline (cin, textInput);
+			v = pList.searchByTitlePhrase(textInput);	//stops looping over empty vector
+			if (v.size() > 0) {
+				for (unsigned i = 0; i < v.size(); i++) {
+					Song s1 = v[i];
+					cout << s1.getTitle() << endl;
+					cout << s1.getArtist() << endl;
+					cout << s1.getYear() << endl;
+			}
+			}
+			else {
+				cout << "No songs with given phrase in title." << endl;
+			}
+		}
+		else if (userInput == 4) {
+				cout << "Enter song title." << endl;
+				string givenTitle;
+				cin.ignore();
+				getline (cin, givenTitle);
+				cout << "Enter song artist." << endl;
+				string givenArtist;
+				getline (cin, givenArtist);
+				cout << "Enter the year the song was made." << endl;
+				unsigned givenYear;
+				cin >> givenYear;
+				while (!cin) {	//makes sure the given value is not a string.
+					cout << "Please enter number!" << endl;
+					cin.clear();
+					cin.ignore();
+					cin >> givenYear;
+				}
+				Song s1(givenTitle, givenArtist, givenYear);
+				pList.addSong(s1);
+		}
+		else if (userInput == 5) {
+			cout << "Enter song title." << endl;
+			string givenTitle;
+			cin.ignore();
+			getline (cin, givenTitle);
+			cout << "Enter song artist." << endl;
+			string givenArtist;
+			getline (cin, givenArtist);
+			cout << "Enter the year the song was made." << endl;
+			unsigned givenYear;	//these three variables take in the three components needed to build song
+			cin >> givenYear;
+			while (!cin) {	//makes sure the given value is not a string.
+				cout << "Please enter number!" << endl;
+				cin.clear();
+				cin.ignore();
+				cin >> givenYear;
+			}
+			vector<Song> testsIfNoSongExists;
+			testsIfNoSongExists = pList.searchByYear(givenYear);
+			if (testsIfNoSongExists.size() == 0){		//stops error caused by deleting a non existant
+				cout << "Song by given specifications does not exist." << endl;					//song
+			}
+			else {
+				Song s1(givenTitle, givenArtist, givenYear);
+				pList.removeSong(s1);
+				cout << "Song removed." << endl;
+			}
+
+		}
+		else if (userInput == 6) {
+			pList.save();
+			cout << "Saved!" << endl;
+		}
+		else if (userInput == 0) {
+			cout <<"Goodbye." << endl;
+			break;
+		}
+		else {
+			cout << "Please enter a value between 0 and 6." << endl;
+		}
+	}
+
+}
+
+Call Me Maybe
+Carly Rae Jepsen
+2012
+---
+Let It Be
+The Beatles
+1967
+---
+Let It Be
+Joan Baez
+1971
+---
+Penny Lane
+The Beatles
+1967
+---
+]0;aaf25@gold29: ~/cs112/lab01[01;32maaf25@gold29[00m:[01;34m~/cs112/lab01[00m$ [K[K]0;aaf25@gold29: ~/cs112/lab01[01;32maaf25@gold29[00m:[01;34m~/cs112/lab01[00m$ [K]0;aaf25@gold29: ~/cs112/lab01[01;32maaf25@gold29[00m:[01;34m~/cs112/lab01[00m$ cd debug
+bash: cd: debug: No such file or directory
+]0;aaf25@gold29: ~/cs112/lab01[01;32maaf25@gold29[00m:[01;34m~/cs112/lab01[00m$ cd Debug
+]0;aaf25@gold29: ~/cs112/lab01/Debug[01;32maaf25@gold29[00m:[01;34m~/cs112/lab01/Debug[00m$ ls
+Application.d  main.d    objects.mk  PlayListTester.d  Song.o        sources.mk
+Application.o  main.o    PlayList.d  PlayListTester.o  songTester.d  subdir.mk
+[0m[01;32mlab01[0m          makefile  PlayList.o  Song.d            songTester.o
+]0;aaf25@gold29: ~/cs112/lab01/Debug[01;32maaf25@gold29[00m:[01;34m~/cs112/lab01/Debug[00m$ make all
+make: Nothing to be done for 'all'.
+]0;aaf25@gold29: ~/cs112/lab01/Debug[01;32maaf25@gold29[00m:[01;34m~/cs112/lab01/Debug[00m$ cd ..
+]0;aaf25@gold29: ~/cs112/lab01[01;32maaf25@gold29[00m:[01;34m~/cs112/lab01[00m$ ./Debug/lab01
+Testing class Song...
+- constructors ...  0  1  Passed!
+- readFrom()...  0  1  2 Passed!
+- writeTo()...  0  1  2  Passed!
+- Comparing ...  true  false  false  false Passed!
+All tests passed!
+
+Testing class PlayList...
+- constructors... 0  Passed!
+- searchByArtist()...  0  1  2  Passed!
+- searchByYear()... 0  1  2  Passed! 
+- searchByTitlePhrase()... 0  1  2  Passed! 
+- addSong()... 0  1  Passed! 
+- removeSong()... 0  Passed! 
+- testSave()... 0  1  Passed! 
+All tests passed!
+Welcome to the PlayList Manager! 
+Please enter: 
+1 - to search the playlist for songs by a given artist 
+2 - to search the playlist for songs from a given year 
+3 - to search the playlist for songs with a given phrase in their title 
+4 - to add a new song to the playlist 
+5 - to remove a song from the playlist 
+6 - to save the playlist 
+0 - to quit 
+--->1
+Enter phrase to search for...
+The Beatles
+Let It Be
+The Beatles
+1967
+Penny Lane
+The Beatles
+1967
+Welcome to the PlayList Manager! 
+Please enter: 
+1 - to search the playlist for songs by a given artist 
+2 - to search the playlist for songs from a given year 
+3 - to search the playlist for songs with a given phrase in their title 
+4 - to add a new song to the playlist 
+5 - to remove a song from the playlist 
+6 - to save the playlist 
+0 - to quit 
+--->1
+Enter phrase to search for...
+T Led Zepel  pelin
+No songs by given artist.
+Welcome to the PlayList Manager! 
+Please enter: 
+1 - to search the playlist for songs by a given artist 
+2 - to search the playlist for songs from a given year 
+3 - to search the playlist for songs with a given phrase in their title 
+4 - to add a new song to the playlist 
+5 - to remove a song from the playlist 
+6 - to save the playlist 
+0 - to quit 
+--->2
+Enter year to search for...
+1967
+Let It Be
+The Beatles
+1967
+Penny Lane
+The Beatles
+1967
+Welcome to the PlayList Manager! 
+Please enter: 
+1 - to search the playlist for songs by a given artist 
+2 - to search the playlist for songs from a given year 
+3 - to search the playlist for songs with a given phrase in their title 
+4 - to add a new song to the playlist 
+5 - to remove a song from the playlist 
+6 - to save the playlist 
+0 - to quit 
+--->2
+Enter year to search for...
+h
+Please enter number!
+2012
+Call Me Maybe
+Carly Rae Jepsen
+2012
+Welcome to the PlayList Manager! 
+Please enter: 
+1 - to search the playlist for songs by a given artist 
+2 - to search the playlist for songs from a given year 
+3 - to search the playlist for songs with a given phrase in their title 
+4 - to add a new song to the playlist 
+5 - to remove a song from the playlist 
+6 - to save the playlist 
+0 - to quit 
+--->3
+Enter phrase to search for...
+Let It Be
+Let It Be
+The Beatles
+1967
+Let It Be
+Joan Baez
+1971
+Welcome to the PlayList Manager! 
+Please enter: 
+1 - to search the playlist for songs by a given artist 
+2 - to search the playlist for songs from a given year 
+3 - to search the playlist for songs with a given phrase in their title 
+4 - to add a new song to the playlist 
+5 - to remove a song from the playlist 
+6 - to save the playlist 
+0 - to quit 
+--->5 4
+Enter song title.
+Crocodile Rock
+Enter song artist.
+Elton John
+Enter the year the song was made.
+1973
+Welcome to the PlayList Manager! 
+Please enter: 
+1 - to search the playlist for songs by a given artist 
+2 - to search the playlist for songs from a given year 
+3 - to search the playlist for songs with a given phrase in their title 
+4 - to add a new song to the playlist 
+5 - to remove a song from the playlist 
+6 - to save the playlist 
+0 - to quit 
+--->1
+Enter phrase to search for...
+Crocodile         Elton John
+No songs by given artist.
+Welcome to the PlayList Manager! 
+Please enter: 
+1 - to search the playlist for songs by a given artist 
+2 - to search the playlist for songs from a given year 
+3 - to search the playlist for songs with a given phrase in their title 
+4 - to add a new song to the playlist 
+5 - to remove a song from the playlist 
+6 - to save the playlist 
+0 - to quit 
+--->0
+Goodbye.
+]0;aaf25@gold29: ~/cs112/lab01[01;32maaf25@gold29[00m:[01;34m~/cs112/lab01[00m$ .Debug/lab01
+bash: .Debug/lab01: No such file or directory
+]0;aaf25@gold29: ~/cs112/lab01[01;32maaf25@gold29[00m:[01;34m~/cs112/lab01[00m$ ./Debug/L lab-01   01
+Testing class Song...
+- constructors ...  0  1  Passed!
+- readFrom()...  0  1  2 Passed!
+- writeTo()...  0  1  2  Passed!
+- Comparing ...  true  false  false  false Passed!
+All tests passed!
+
+Testing class PlayList...
+- constructors... 0  Passed!
+- searchByArtist()...  0  1  2  Passed!
+- searchByYear()... 0  1  2  Passed! 
+- searchByTitlePhrase()... 0  1  2  Passed! 
+- addSong()... 0  1  Passed! 
+- removeSong()... 0  Passed! 
+- testSave()... 0  1  Passed! 
+All tests passed!
+Welcome to the PlayList Manager! 
+Please enter: 
+1 - to search the playlist for songs by a given artist 
+2 - to search the playlist for songs from a given year 
+3 - to search the playlist for songs with a given phrase in their title 
+4 - to add a new song to the playlist 
+5 - to remove a song from the playlist 
+6 - to save the playlist 
+0 - to quit 
+--->1
+Enter phrase to search for...
+Call Me Maybe
+No songs by given artist.
+Welcome to the PlayList Manager! 
+Please enter: 
+1 - to search the playlist for songs by a given artist 
+2 - to search the playlist for songs from a given year 
+3 - to search the playlist for songs with a given phrase in their title 
+4 - to add a new song to the playlist 
+5 - to remove a song from the playlist 
+6 - to save the playlist 
+0 - to quit 
+--->Carly R       1
+Enter phrase to search for...
+Carly Rae Jepsen
+Call Me Maybe
+Carly Rae Jepsen
+2012
+Welcome to the PlayList Manager! 
+Please enter: 
+1 - to search the playlist for songs by a given artist 
+2 - to search the playlist for songs from a given year 
+3 - to search the playlist for songs with a given phrase in their title 
+4 - to add a new song to the playlist 
+5 - to remove a song from the playlist 
+6 - to save the playlist 
+0 - to quit 
+--->5  
+Enter song title.
+Call m Me Maybe
+Enter song artist.
+Carly Rae Jepsen
+Enter the year the song was made.
+0 2012
+Song removed.
+Welcome to the PlayList Manager! 
+Please enter: 
+1 - to search the playlist for songs by a given artist 
+2 - to search the playlist for songs from a given year 
+3 - to search the playlist for songs with a given phrase in their title 
+4 - to add a new song to the playlist 
+5 - to remove a song from the playlist 
+6 - to save the playlist 
+0 - to quit 
+--->1
+Enter phrase to search for...
+C Carly Rae Jepsen
+Call Me Maybe
+Carly Rae Jepsen
+2012
+Welcome to the PlayList Manager! 
+Please enter: 
+1 - to search the playlist for songs by a given artist 
+2 - to search the playlist for songs from a given year 
+3 - to search the playlist for songs with a given phrase in their title 
+4 - to add a new song to the playlist 
+5 - to remove a song from the playlist 
+6 - to save the playlist 
+0 - to quit 
+--->6
+Saved!
+Welcome to the PlayList Manager! 
+Please enter: 
+1 - to search the playlist for songs by a given artist 
+2 - to search the playlist for songs from a given year 
+3 - to search the playlist for songs with a given phrase in their title 
+4 - to add a new song to the playlist 
+5 - to remove a song from the playlist 
+6 - to save the playlist 
+0 - to quit 
+--->Ca  1
+Enter phrase to search for...
+Carly Rae Jepsen
+Call Me Maybe
+Carly Rae Jepsen
+2012
+Welcome to the PlayList Manager! 
+Please enter: 
+1 - to search the playlist for songs by a given artist 
+2 - to search the playlist for songs from a given year 
+3 - to search the playlist for songs with a given phrase in their title 
+4 - to add a new song to the playlist 
+5 - to remove a song from the playlist 
+6 - to save the playlist 
+0 - to quit 
+--->0
+Goodbye.
+]0;aaf25@gold29: ~/cs112/lab01[01;32maaf25@gold29[00m:[01;34m~/cs112/lab01[00m$ exit
+
+Script done on 2019-09-16 21:33:27-0400

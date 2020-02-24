@@ -1,0 +1,15 @@
+14:05:30 **** Incremental Build of configuration Debug for project lab08 ****
+make all 
+Building file: ../ArrayQueueTester.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"ArrayQueueTester.d" -MT"ArrayQueueTester.o" -o "ArrayQueueTester.o" "../ArrayQueueTester.cpp"
+Finished building: ../ArrayQueueTester.cpp
+ 
+Building target: lab08
+Invoking: GCC C++ Linker
+g++  -o "lab08"  ./ArrayQueue.o ./ArrayQueueTester.o ./LinkedQueue.o ./LinkedQueueTester.o ./tester.o   
+Finished building target: lab08
+ 
+
+14:05:31 Build Finished. 0 errors, 0 warnings. (took 720ms)
+

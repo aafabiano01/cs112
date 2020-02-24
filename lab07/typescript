@@ -1,0 +1,1007 @@
+Script started on 2019-11-11 22:29:14-0500
+]0;aaf25@gold23: ~/cs112/lab07[01;32maaf25@gold23[00m:[01;34m~/cs112/lab07[00m$ c ls
+[0m[01;34mDebug[0m            ReversePoem.h  Stack.cpp         StackTester.cpp  typescript
+[01;34mpoems[0m            RPTester.cpp   StackException.h  StackTester.h
+ReversePoem.cpp  RPTester.h     Stack.h           tester.cpp
+]0;aaf25@gold23: ~/cs112/lab07[01;32maaf25@gold23[00m:[01;34m~/cs112/lab07[00m$ cat tester.cpp Stack.h StackTester.h StackTester.cpp Re  [A]0;aaf25@gold23: ~/cs112/lab07[01;32maaf25@gold23[00m:[01;34m~/cs112/lab07[00m$ cat tester.cpp Stack.h StackTester.h StackTester.cpp [K r  [A]0;aaf25@gold23: ~/cs112/lab07[01;32maaf25@gold23[00m:[01;34m~/cs112/lab07[00m$ cat tester.cpp Stack.h StackTester.h StackTester.cpp [K[A]0;aaf25@gold23: ~/cs112/lab07[01;32maaf25@gold23[00m:[01;34m~/cs112/lab07[00m$ cat tester.cpp Stack.h StackTester.h StackTester.cp[K
+[K[A]0;aaf25@gold23: ~/cs112/lab07[01;32maaf25@gold23[00m:[01;34m~/cs112/lab07[00m$ cat tester.cpp Stack.h StackTester.h StackTester.cpp R [A]0;aaf25@gold23: ~/cs112/lab07[01;32maaf25@gold23[00m:[01;34m~/cs112/lab07[00m$ cat tester.cpp Stack.h StackTester.h StackTester.cpp [K ReversePoem.h ReversePoem.cpp RPTester.h RPTester.cpp StackException.h 
+/* tester.cpp is a "driver" to run the tests in the StackTester class.
+ * Joel Adams, for CS 112 at Calvin University.
+ */
+ 
+#include "StackTester.h"
+#include "ReversePoem.h"
+#include "RPTester.h"
+
+int main() {
+//	StackTester st;
+//	st.runTests();
+	RPTester rpt;
+	rpt.runTests();
+	rpt.runApp();
+}
+
+/* Stack.h provides a (dynamic-array-based) Stack class.
+ * Started by Joel Adams, for CS 112 at Calvin University.
+ * Student Name: Alex Fabiano
+ * Date: 31 Oct, 2019
+ * 
+ * Invariant: mySize == 0 && isEmpty() && !isFull()
+ *         || mySize == myCapacity && !isEmpty() && isFull()
+ *         || mySize > 0 && mySize < myCapacity && !isEmpty() && !isFull().
+ * Notes: 
+ * 1. Member mySize always contains the index of the next empty space in myArray
+ *        (the index of the array element into which the next pushed item will be placed).
+ * 2. Sending push() to a full Stack throws the exception Stack::Overflow.
+ * 3. Sending pop() or peekTop() to an empty Stack throws the exception Stack::Underflow.
+ */
+
+#ifndef STACK_H_
+#define STACK_H_
+
+#include "StackException.h"
+#include <string>
+#include <iostream>
+using namespace std;
+
+//typedef int Item;
+template<class Item>
+
+class Stack {
+public:
+	Stack(unsigned capacity);
+	Stack(const Stack& original);
+	~Stack();
+	Stack& operator=(const Stack& original);
+	bool isEmpty() const;
+	bool isFull() const;
+	Item peekTop() const;
+	void push(const Item& it);
+	Item& pop();
+	unsigned getSize() const;
+	unsigned getCapacity();
+	void setCapacity(unsigned newCapacity);
+
+protected:
+	void makeCopyOf(const Stack& original);
+	
+private:
+	unsigned myCapacity;
+	unsigned mySize;
+	Item*    myArray;
+	friend class StackTester;
+};
+
+/* explicit-value constructor
+ * Parameter: capacity, an unsigned value.
+ * Precondition: capacity > 0.
+ * Postcondition: mySize == 0 && myCapacity == capacity
+ *              && myArray contains the address of a dynamic array of 'capacity' entries.
+ */
+template<class Item>
+Stack<Item>::Stack(unsigned capacity) {
+	if (capacity == 0) {
+		throw StackException("Stack(capacity)", "capacity must be positive!");
+	}
+   mySize = 0;
+   myCapacity = capacity;
+   myArray = new Item[capacity];
+}
+
+/* copy constructor
+ * Parameter: original, a Stack (const reference).
+ * Postcondition: I am a copy of original.
+ */
+template<class Item>
+Stack<Item>::Stack(const Stack& original) {
+	makeCopyOf(original);
+}
+
+/* utility method containing code refactored from
+ *  the copy constructor and operator=.
+ * Parameter: original, a Stack (const reference).
+ * Precondition: original.myCapacity > 0.
+ * Postcondition: I am a copy of original.
+ */
+template<class Item>
+void Stack<Item>::makeCopyOf(const Stack& original) {
+	myCapacity = original.myCapacity;
+	myArray = new Item[myCapacity];
+
+	for (unsigned i = 0; i < myCapacity; i++) {
+		myArray[i] = original.myArray[i];
+	}
+	mySize = original.mySize;
+}
+
+/* destructor
+ * Postcondition: myCapacity == 0 && mySize == 0
+ *             && myArray has been deallocated.
+ */
+template<class Item>
+Stack<Item>::~Stack() {
+	delete [] myArray;
+	myArray = NULL;
+	myCapacity = 0;
+	mySize = 0;
+}
+
+/* assignment operator
+ * Parameter: original, a Stack (const reference).
+ * Postcondition: I am a copy of original
+ *              && I have been returned.
+ */
+template<class Item>
+Stack<Item>& Stack<Item>::operator=(const Stack<Item>& original) {
+	if (this != &original) {
+		delete [] myArray;
+		makeCopyOf(original);
+	}
+	return *this;
+}
+/*
+ * isEmpty() determines whether a stack is empty or not.
+ * Param: Requires a stack to operate on.
+ * Return: Boolean true or false, true if empty, false if otherwise.
+ * Post: Stack is unchanged.
+ */
+template<class Item>
+bool Stack<Item>::isEmpty() const {
+	if (mySize == 0) {
+		return true;
+	}
+	return false;
+}
+/*
+ * isFull() determines whether a stack is empty or not.
+ * Param: Requires a stack to operate on.
+ * Return: Boolean true or false, true if full, false if otherwise.
+ * Post: Stack is unchanged.
+ */
+template<class Item>
+bool Stack<Item>::isFull() const {
+	if (mySize == myCapacity) {
+		return true;
+	}
+	return false;
+}
+/*
+ * peekTop() returns the item at the top of a stack.
+ * Conditions: Stack is not empty.
+ * Param: A stack to operate on.
+ * Return: The item at the top of the stack/ end the array.
+ * Post: Stack is unchanged.
+ */
+template<class Item>
+Item Stack<Item>::peekTop() const {
+   if ( isEmpty() ) {
+      throw StackException("peekTop()", "stack is empty!");
+   }
+   return myArray[mySize - 1];
+}
+/*
+ * push() appends an item to the top of a stack if it is not full.
+ * Conditions: Stack is not full.
+ * Param: Stack to operate on, item to append to stack.
+ * Return: Nothing.
+ * Post: Stack now has 1 more item and size is incremented by 1.
+ */
+template<class Item>
+void Stack<Item>::push(const Item& it) {
+	if ( isFull() ) {
+		throw StackException("push()", "stack is full!");
+	}
+	myArray[mySize] = it;
+	mySize++;
+}
+/*
+ * pop() takes the item from the top of the stack.
+ * Conditions: Stack is not empty.
+ * Param: Stack to operate on.
+ * Return: Item from top of stack.
+ * Post: Stack has 1 less item, size decreased by 1.
+ */
+template<class Item>
+Item& Stack<Item>::pop() {
+	if ( isEmpty() ) {
+		throw StackException("pop()", "stack is empty!");
+	}
+	mySize--;
+	return myArray[mySize];
+}
+/*
+ * getSize() returns the size of the stack it is called on.
+ * Param: Stack to operate on.
+ * Return: Size of the stack.
+ * Post: Stack is unchanged.
+ */
+template<class Item>
+unsigned Stack<Item>::getSize() const {
+//	if ( isFull() ) {
+//		return (mySize);
+//	} else if ( isEmpty() ) {
+//		return 0;
+//	} else {
+//		unsigned i;
+//		for (i = 0; i < mySize; ++i) {
+//			if (myArray[i + 1] == NULL) {
+//				return i;
+//			}
+//		}
+//	}
+	return mySize;
+}
+/*
+ *
+ */
+template<class Item>
+unsigned Stack<Item>::getCapacity() {
+//	return (myCapacity - getSize());
+	return myCapacity;
+}
+/*
+ * setCapacity() sets a new capacity for a stack.
+ * Conditions: The new capacity for the stack must not be 0 or less than the
+ * size of the stack.
+ * Param: Stack to operate on, capacity to change to.
+ * Return: Nothing.
+ * Post: Stack's capacity is set to the amount specified.
+ */
+template<class Item>
+void Stack<Item>::setCapacity(unsigned newCapacity) {
+	if (newCapacity == 0 || newCapacity < getSize()) {
+		throw StackException("setCapacity", "newCapacity too small!");
+	}
+	if (newCapacity != myCapacity) {
+		unsigned size = getSize();
+		Item *bigArray = new Item [newCapacity];
+		for (unsigned i = 0; i < size; ++i) {
+			bigArray[i] = myArray[i];
+		}
+		delete[] myArray;
+		myCapacity = newCapacity;
+//		for (unsigned i = 0; i < size; ++i) {
+//			 myArray[i] = bigArray[i];
+//		}
+		myArray = bigArray;
+//		delete[] bigArray;
+	}
+}
+
+#endif
+/* StackTester.h declares a test-class for a dynamically allocated (array) Stack.
+ * Started by Joel Adams, for CS 112 at Calvin University.
+ * Student Name: Alex Fabiano
+ * Date: 31 Oct, 2019
+ */
+
+#ifndef STACKTESTER_H_
+#define STACKTESTER_H_
+
+#include "Stack.h"
+
+class StackTester {
+public:
+	void runTests();
+	void testConstructor();
+	void testIsEmpty();
+	void testPushPeekTopAndIsFull();
+	void testPop();
+	void testCopyConstructor();
+	void testAssignment();
+	void testDestructor();
+	void testGetSize();
+	void testGetCapacity();
+	void testSetCapacity();
+};
+
+#endif /*STACKTESTER_H_*/
+
+/* StackTester.cpp defines test-methods for the 
+ * dynamically allocated (array) Stack operations
+ * Started by Joel Adams, for CS 112 at Calvin University.
+ * Student Name: Alex Fabiano
+ * Date: 31 Oct, 2019
+ */
+
+#include "StackTester.h"
+#include "Stack.h"
+#include <iostream>  // cout, cerr, ...
+#include <cassert>   // assert()
+#include <cstdlib>   // exit()
+using namespace std;
+
+void StackTester::runTests() {
+	cout << "Testing Stack class..." << endl;
+	testConstructor();
+	testIsEmpty();
+	testPushPeekTopAndIsFull();
+	testPop();
+	testCopyConstructor();
+	testAssignment();
+	testDestructor();
+	testGetSize();
+	testGetCapacity();
+	testSetCapacity();
+	cout << "All tests passed!" << endl;
+}
+
+void StackTester::testConstructor() {
+	cout << "- Testing constructor... " << flush;
+	// invalid parameter
+	try {
+		Stack <int> s1(0);
+		cerr << "\nConstructed stack of size 0\n";
+		exit(1);
+	} catch (const StackException& se) {
+//		cout << se << flush;
+		cout << " 0 " << flush;
+	}
+	// valid parameter
+	Stack <int> s2(3);
+	cout << " 1 " << flush;
+	cout << " Passed!" << endl;
+}
+
+void StackTester::testIsEmpty() {
+	cout << "- Testing isEmpty()... " << flush;
+	// capacity 1
+	Stack <int> s1(1);
+	assert( s1.isEmpty() );
+	cout << " 1 " << flush;
+	// capacity > 1
+	Stack <int> s2(3);
+	assert( s2.isEmpty() );
+	cout << " 2 " << flush;
+	cout << " Passed!" << endl;
+}
+
+void StackTester::testPushPeekTopAndIsFull() {
+	cout << "- Testing push()... " << flush;
+	// test with capacity 1
+	Stack <int> s1(1);
+	s1.push(11);
+	assert( s1.peekTop() == 11 );
+	assert( !s1.isEmpty() );
+	assert( s1.isFull() );
+	try {
+		s1.push(22);
+		cerr << "\npush() worked on a full stack (size 1)\n";
+		exit(1);
+	} catch (const StackException& se) {
+		cout << " 1 " << flush;
+	}
+	// test with capacity > 1
+	Stack <int> s2(3);
+	s2.push(11);
+	assert( s2.peekTop() == 11 );
+	s2.push(22);
+	assert( s2.peekTop() == 22 );
+	s2.push(33);
+	assert( s2.peekTop() == 33 );
+	try {
+		s2.push(44);
+		cerr << "\npush() worked on a full stack (size 3)\n";
+		exit(1);
+	} catch (const StackException& se) {
+		cout << " 2 " << flush;
+	}
+	cout << " Passed! " << endl;
+}
+
+void StackTester::testPop() {
+	cout << "- Testing pop()... " << flush;
+	// try empty, capacity 1
+	Stack <int> s1(1);
+	assert( s1.isEmpty() );
+    try {
+            s1.peekTop();
+            cerr << "\npeekTop() worked on empty stack (size 1)\n";
+            exit(1);
+    } catch (const StackException& se) {
+            cout << " 0a " << flush;
+    }
+	try {
+		s1.pop();
+		cerr << "\npop() worked on empty stack (size 1)\n";
+		exit(1);
+	} catch (const StackException& se) {
+		cout << " 0b " << flush;
+	}
+
+	// try empty, capacity > 1
+	Stack <int> s2(3);
+	try {
+		s2.pop();
+		cerr << "\npop() worked on empty stack (size 3)\n";
+		exit(1);
+	} catch (const StackException& se) {
+		cout << " 1a " << flush;
+	}
+    try {
+            s2.peekTop();
+            cerr << "\npeekTop() worked on empty stack (size 3)\n";
+            exit(1);
+    } catch (const StackException& se) {
+            cout << " 1b " << flush;
+    }
+
+	// try non-empty, capacity 1
+	Stack <int> s3(1);
+	s3.push(11);
+	assert( s3.peekTop() == 11 );
+	assert( s3.pop() == 11 );
+	cout << " 2 " << flush;
+	try {
+		s3.pop();
+		cerr << "\ns3.pop() worked on empty stack (size 1)\n";
+		exit(1);
+	} catch (const StackException& se) {
+		cout << " 2a " << flush;
+	}
+    try {
+            s3.peekTop();
+            cerr << "\ns3.peekTop() worked on empty stack (size 1)\n";
+            exit(1);
+    } catch (const StackException& se) {
+            cout << " 2b " << flush;
+    }
+
+	// try non-empty, capacity > 1
+	Stack <int> s4(3);
+	s4.push(11);
+	s4.push(22);
+	s4.push(33);
+	assert( s4.peekTop() == 33 );
+	assert( s4.pop() == 33 );
+	assert( s4.peekTop() == 22 );
+	assert( s4.pop() == 22 );
+	assert( s4.peekTop() == 11 );
+	assert( s4.pop() == 11 );
+	cout << " 3 " << flush;
+	try {
+		s4.pop();
+		cerr << "\ns4.pop() worked on empty stack (size 3)\n";
+		exit(1);
+	} catch (const StackException& se) {
+		cout << " 3a " << flush;
+	}
+    try {
+            s4.peekTop();
+            cerr << "\ns4.peekTop() worked on empty stack (size 3)\n";
+            exit(1);
+    } catch (const StackException& se) {
+            cout << " 3b " << flush;
+    }
+
+	cout << " Passed!" << endl;
+}
+
+void StackTester::testCopyConstructor() {
+	cout << "- Testing copy constructor... " << flush;
+	// minimal empty Stack
+	Stack <int> s1(1);
+	Stack <int> s2(s1);
+	assert( s2.isEmpty() );
+	assert( s2.myArray != NULL );
+	assert( s2.myCapacity == 1 );
+	assert( s2.myArray != s1.myArray );
+	cout << " 1 " << flush;
+	// minimal non-empty Stack
+	Stack <int> s3(1);
+	s3.push(11);
+	Stack <int> s4(s3);
+	assert( !s4.isEmpty() );
+	assert( s4.isFull() );
+	assert( s4.peekTop() == 11 );
+	assert( s4.myArray != s3.myArray );
+	cout << " 2 " << flush;
+	// non-minimal, non-empty stack
+	Stack <int> s5(3);
+	s5.push(11);
+	s5.push(22);
+	s5.push(33);
+	Stack <int> s6(s5);
+	assert( s6.myCapacity == s5.myCapacity );
+	assert( s6.mySize == s5.mySize );
+	assert( s6.myArray != s5.myArray );
+	assert( s6.pop() == 33 );
+	assert( s6.pop() == 22 );
+	assert( s6.pop() == 11 );
+	assert( s5.peekTop() == 33 );
+	cout << " 3 " << flush;
+	cout << "Passed!" << endl;
+}
+
+void StackTester::testAssignment() {
+	cout << "- Testing assignment... " << flush;
+	// minimal empty Stacks, same size
+	Stack <int> s1(1);
+	Stack <int> s2(1);
+	s2 = s1;
+	assert( s2.isEmpty() );
+	assert( s2.myArray != NULL );
+	assert( s2.myArray != s1.myArray );
+	assert( s2.myCapacity == 1 );
+	cout << " 1 " << flush;
+	// minimal non-empty Stack to empty Stack, same capacity
+	Stack <int> s3(1);
+	s3.push(11);
+	Stack <int> s4(1);
+	s4 = s3;
+	assert( !s4.isEmpty() );
+	assert( s4.isFull() );
+	assert( s4.peekTop() == 11 );
+	assert( s4.myArray != s3.myArray );
+	cout << " 2 " << flush;
+	// minimal empty stack to non-empty stack, same capacity
+	Stack <int> s5(1);
+	Stack <int> s6(1);
+	s6.push(11);
+	s6 = s5;
+	assert( s6.isEmpty() );
+	assert( s6.myArray != NULL );
+	assert( s6.myArray != s5.myArray );
+	assert( s6.myCapacity == 1 );
+	cout << " 3 " << flush;
+	// non-minimal non-empty stack to empty stack, different capacities
+	Stack <int> s7(3);
+	s7.push(11);
+	s7.push(22);
+	s7.push(33);
+	Stack <int> s8(2);
+	s8 = s7;
+	assert( s8.myArray != s7.myArray );
+	assert( s8.myCapacity == s7.myCapacity );
+	assert( s8.mySize == s7.mySize );
+	assert( s8.pop() == 33 );
+	assert( s8.pop() == 22 );
+	assert( s8.pop() == 11 );
+	assert( s7.peekTop() == 33 );
+	cout << " 4 " << flush;
+	// non-minimal, empty stack to non-empty stack, different capacities
+	Stack <int> s9(2);
+	Stack <int> s10(3);
+	s10.push(11);
+	s10.push(22);
+	s10.push(33);
+	s10 = s9;
+	assert( s10.isEmpty() );
+	assert( s10.myArray != s9.myArray );
+	assert( s10.myCapacity == s10.myCapacity );
+	cout << " 5 " << flush;
+	// self-assignment, minimal size
+	Stack <int> s11(1);
+	s11.push(11);
+	s11 = s11; // @suppress("Assignment to itself")
+	assert( s11.isFull() );
+	assert( !s11.isEmpty() );
+	cout << " 6 " << flush;
+	// chaining
+	Stack <int> s12(2);
+	s12.push(11);
+	s12.push(22);
+	Stack <int> s13(1);
+	Stack <int> s14(1);
+	s14 = s13 = s12;
+	assert( s14.isFull() );
+	assert( s14.myArray != s13.myArray );
+	assert( s14.myArray != s12.myArray );
+	assert( s14.pop() == 22 );
+	assert( s14.pop() == 11 );
+	assert( s14.isEmpty() );
+	cout << " 7 " << flush;
+      // self-assignment, non-minimal size
+      s13 = s13; // @suppress("Assignment to itself")
+	assert( !s13.isEmpty() );
+	assert( s13.isFull() );
+	assert( s13.pop() == 22 );
+	assert( s13.pop() == 11 );
+	assert( s13.isEmpty() );
+	cout << " 8 " << flush;
+	cout << "Passed!" << endl;
+}
+
+void StackTester::testDestructor() {
+	cout << "- Testing destructor..." << flush;
+	// minimal, empty
+	Stack <int> s1(1);
+	s1.~Stack();
+	assert( s1.isEmpty() );
+	assert( s1.myArray == NULL );
+	assert( s1.myCapacity == 0 );
+	cout << " 1 " << flush;
+	// minimal, non-empty
+	Stack <int> s2(1);
+	s2.push(11);
+	s2.~Stack();
+	assert( s2.isEmpty() );
+	assert( s2.myArray == NULL );
+	assert( s2.myCapacity == 0 );
+	cout << " 2 " << flush;
+	// non-minimal, empty
+	Stack <int> s3(3);
+	s3.~Stack();
+	assert( s3.isEmpty() );
+	assert( s3.myArray == NULL );
+	assert( s3.myCapacity == 0 );
+	cout << " 3 " << flush;
+	// non-minimal, non-empty
+	Stack <int> s4(3);
+	s4.push(11);
+	s4.push(22);
+	s4.push(33);
+	s4.~Stack();
+	assert( s4.isEmpty() );
+	assert( s4.myArray == NULL );
+	assert( s4.myCapacity == 0 );
+	cout << " 4 " << flush;
+	cout << " Passed!" << endl;
+}
+
+void StackTester::testGetSize() {
+	cout << "- Testing getSize()..." << flush;
+	//Works on empty?
+	Stack <int> s1(1);
+	assert (s1.getSize() == 0);
+	cout << " 0 " << flush;
+	//Works on full?
+	Stack <int> s2(2);
+	s2.push(11);
+	s2.push(22);
+	assert (s2.getSize() == 2);
+	cout << " 1 " << flush;
+	//Works on non empty and non full?
+	Stack <int> s3(3);
+	s3.push(11);
+	s3.push(22);
+	assert (s3.getSize() == 2);
+	cout << " 2 " << flush;
+	cout << " Passed!" << endl;
+}
+
+void StackTester::testGetCapacity() {
+	cout << "- Testing getCapacity()..." << flush;
+	//Works on empty?
+	Stack <int> s1(1);
+	assert (s1.getCapacity() == 1);
+	cout << " 0 " << flush;
+	//Works on full?
+	Stack <int> s2(2);
+	s2.push(11);
+	s2.push(22);
+	assert (s2.getCapacity() == 0);
+	cout << " 1 " << flush;
+	//Works on non empty and non full?
+	Stack <int> s3(3);
+	s3.push(11);
+	s3.push(22);
+	assert (s3.getCapacity() == 1);
+	cout << " 2 " << flush;
+	cout << " Passed!" << endl;
+}
+
+void StackTester::testSetCapacity() {
+	cout << "- Testing getCapacity()..." << flush;
+	//Works on cap = 0?
+    try {
+    	Stack <int> s1(1);
+    	s1.setCapacity(0);
+    	cerr << "\ns4.setCapacity() worked on cap = 0! (size 3)\n";
+    	exit(1);
+    } catch (const StackException& se) {
+    	cout << " 0 " << flush;
+    }
+	//Works on cap < getSize()?
+    try {
+    	Stack <int> s2(5);
+    	s2.push(11);
+    	s2.push(22);
+    	s2.push(33);
+    	s2.push(44);
+    	s2.push(55);
+    	s2.setCapacity(3);
+    	cerr << "\ns4.setCapacity() worked on cap = 0! (size 3)\n";
+    	exit(1);
+    } catch (const StackException& se) {
+    	cout << " 1 " << flush;
+    }
+	//Works on setting capacity as low as possible?
+	Stack <int> s3(3);
+	s3.push(11);
+	s3.push(22);
+	assert (s3.getCapacity() == 1);
+	s3.setCapacity(2);
+	assert (s3.getCapacity() == 0);
+	assert (s3.pop() == 22);
+	assert (s3.pop() == 11);
+	cout << " 2 " << flush;
+	//Works on setting capacity not as low as possible?
+	Stack <int> s4(10);
+	s4.push(11);
+	s4.push(22);
+	s4.push(33);
+	s4.push(44);
+	s4.push(55);
+	s4.push(66);
+	assert (s4.getCapacity() == 4);
+	s4.setCapacity(8);
+	assert (s4.getCapacity() == 2);
+	cout << " 3 " << flush;
+	//Works on setting capacity larger?
+	Stack <int> s5(2);
+	s5.push(11);
+	s5.push(22);
+	assert (s5.getCapacity() == 0);
+	s5.setCapacity(5);
+	assert (s5.getCapacity() == 3);
+	cout << " 4 " << flush;
+	cout << " Passed!" << endl;
+}
+
+/* ReversePoem.h provides a definitions for methods to reverse poems that can be read both ways.
+ * CS 112 at Calvin University.
+ * Student Name: Alex Fabiano
+ * Date: 31 Oct, 2019
+ */
+
+#ifndef REVERSEPOEM_H_
+#define REVERSEPOEM_H_
+
+#include "Stack.h"
+#include <iostream>
+#include <fstream>
+using namespace std;
+#include <bits/stdc++.h>
+
+class ReversePoem {
+public:
+	ReversePoem(const string& fileName);
+	string getTitle();
+	string getAuthor();
+	string getBody();
+	string getBodyReversed();
+private:
+	string myTitle;
+	string myAuthor;
+	vector<string> myBody;
+	Stack <string> myBodyReversed;
+	friend class RPTester;
+};
+
+#endif /* REVERSEPOEM_H_ */
+/* ReversePoem.cpp defines the methods that will reverse a poem.
+ * CS 112 at Calvin University.
+ * Student Name: Alex Fabiano
+ * Date: 31 Oct, 2019
+ */
+
+#include "ReversePoem.h"
+
+ReversePoem::ReversePoem(const string& fileName) : myBodyReversed(1){
+	ifstream inFile(fileName.c_str());
+	assert(inFile.is_open());
+	string line;
+	getline(inFile, myTitle);
+	getline(inFile, myAuthor);
+	getline(inFile, line);
+	while(inFile.good()) {
+		getline(inFile, line);
+		try {
+			myBodyReversed.push(line);
+		} catch (const StackException& se) {
+			myBodyReversed.setCapacity(myBodyReversed.getCapacity() * 2);
+			myBodyReversed.push(line);
+		}
+		myBody.push_back(line);
+	}
+	inFile.close();
+}
+
+string ReversePoem::getTitle() {
+	return myTitle;
+}
+
+string ReversePoem::getAuthor() {
+	return myAuthor;
+}
+
+string ReversePoem::getBody() {
+	string body;
+	for (unsigned i = 0; i < myBody.size(); ++i) {
+		body += myBody[i] += "\n";
+	}
+	return body;
+}
+
+string ReversePoem::getBodyReversed() {
+	string body;
+	for (unsigned i = 0; i < myBodyReversed.getSize() + 1; ++i) {
+		body += myBodyReversed.pop() += "\n";
+	}
+	return body;
+}
+/* RPTester.h declares a test-class for the ReversePoem class.
+ * CS 112 at Calvin University.
+ * Student Name: Alex Fabiano
+ * Date: 31 Oct, 2019
+ */
+
+#ifndef RPTESTER_H_
+#define RPTESTER_H_
+
+#include "ReversePoem.h"
+#include "Stack.h"
+class RPTester {
+public:
+	void runTests();
+	void testReversed();
+	void testConstructorandGetTitleAuthorBody();
+	void runApp();
+};
+
+#endif /*RPTESTER_H_*/
+/* ReversePoem.cpp defines the methods that will reverse a poem.
+ * CS 112 at Calvin University.
+ * Student Name: Alex Fabiano
+ * Date: 31 Oct, 2019
+ */
+
+#include "RPTester.h"
+#include <cassert>
+
+void RPTester::runApp() {
+	while(true) {
+		string name;
+		cout << "Enter the name of the poem file:" << flush;
+		cin >> name;
+		ReversePoem rp (name);
+		cout << "\n" << rp.getTitle() << "\n" << rp.getAuthor() << "\n\n" << rp.getBody() << "\n" << " *** Bottom-To-Top *** " << "\n\n" << rp.getBodyReversed() << endl;
+	}
+}
+
+void RPTester::runTests() {
+	cout << "Testing ReversePoem class..." << endl;
+	testConstructorandGetTitleAuthorBody();
+	testReversed();
+	cout << "All tests passed!" << endl;
+}
+
+void RPTester::testConstructorandGetTitleAuthorBody() {
+	cout << "- Testing getTitleAuthorBody()... " << flush;
+	ReversePoem rp ("poems/a.txt");
+	assert (rp.getTitle() == "T t");
+	cout << " 0 " << flush;
+	assert (rp.getAuthor() == "A a");
+	cout << " 1 " << flush;
+	assert(rp.getBody() == "L 1\nl 2\n");
+	cout << " 2 " << flush;
+	cout << " Passed!" << endl;
+}
+
+void RPTester::testReversed() {
+	cout << "- Testing getBodyReversed()... " << flush;
+	ReversePoem rp ("poems/a.txt");
+	assert(rp.getBodyReversed() == "l 2\nL 1\n");
+	cout << " Passed!" << endl;
+}
+/* StackException.h models exceptions in stack operations.
+ * Joel Adams, for CS 112 at Calvin University.
+ */
+
+#ifndef STACK_EXCEPTION
+#define STACK_EXCEPTION
+
+#include <iostream>
+using namespace std;
+
+ 
+class StackException {
+public:
+   StackException(const string& whereThrown,
+                  const string& message) { 
+       myLocation = whereThrown; 
+       myMessage = message; 
+   }
+
+   string asString() const {
+       return "*** StackException in " +
+               myLocation + ": " + myMessage; 
+   }
+
+private:
+   string myLocation;
+   string myMessage;
+};  // StackException
+
+
+/* Function to allow a StackException (or a subclass) to be displayed
+ * via an ostream.
+ * Parameters: out, an ostream;
+ *             se, a StackException.
+ * Postcondition: the string representation of se has been inserted
+ * into out
+ *             && return-value == out.
+ */
+inline ostream& operator<<(ostream& out, const StackException& se) {
+      out << se.asString();
+      return out;
+}
+
+#endif
+
+]0;aaf25@gold23: ~/cs112/lab07[01;32maaf25@gold23[00m:[01;34m~/cs112/lab07[00m$ [Kcd d Debug
+]0;aaf25@gold23: ~/cs112/lab07/Debug[01;32maaf25@gold23[00m:[01;34m~/cs112/lab07/Debug[00m$ ls
+[0m[01;32mlab07[0m       ReversePoem.d  RPTester.o  Stack.o        subdir.mk
+makefile    ReversePoem.o  sources.mk  StackTester.d  tester.d
+objects.mk  RPTester.d     Stack.d     StackTester.o  tester.o
+]0;aaf25@gold23: ~/cs112/lab07/Debug[01;32maaf25@gold23[00m:[01;34m~/cs112/lab07/Debug[00m$ make all
+make: Nothing to be done for 'all'.
+]0;aaf25@gold23: ~/cs112/lab07/Debug[01;32maaf25@gold23[00m:[01;34m~/cs112/lab07/Debug[00m$ cd ..
+]0;aaf25@gold23: ~/cs112/lab07[01;32maaf25@gold23[00m:[01;34m~/cs112/lab07[00m$ ./Debug/lab07
+Testing ReversePoem class...
+- Testing getTitleAuthorBody()...  0  1  2  Passed!
+- Testing getBodyReversed()...  Passed!
+All tests passed!
+Enter the name of the poem file:poems/anorexia.txt
+
+Anorexia
+Anonymous
+
+I hate the girl in the mirror
+so you'll never hear me say that
+I'm good enough
+I know in my heart that
+the number on the scale defines my worth
+and that
+being thin will make me happy
+I refuse to believe that there is hope
+I'm ashamed of my body
+No longer can I say
+I am worth fighting for.
+
+ *** Bottom-To-Top *** 
+
+I am worth fighting for.
+No longer can I say
+I'm ashamed of my body
+I refuse to believe that there is hope
+being thin will make me happy
+and that
+
+Enter the name of the poem file:por ems/love.txt
+
+Love?
+Anonymous
+
+I don't love you anymore...
+I would be lying if I said
+That I still love you the way I always did.
+I'm sure
+Nothing was in vain.
+And I feel inside of me that
+You mean nothing to me
+I could never really say that
+Our time together matters.
+I feel more and more that
+I'm forgetting you...
+And I will never use the phrase
+I love you.
+I'm sorry but I must tell the truth.
+
+ *** Bottom-To-Top *** 
+
+I'm sorry but I must tell the truth.
+I love you.
+And I will never use the phrase
+I'm forgetting you...
+I feel more and more that
+Our time together matters.
+I could never really say that
+You mean nothing to me
+
+Enter the name of the poem file:lab07: ../ReversePoem.cpp:11: ReversePoem::ReversePoem(const string&): Assertion `inFile.is_open()' failed.
+Aborted
+]0;aaf25@gold23: ~/cs112/lab07[01;32maaf25@gold23[00m:[01;34m~/cs112/lab07[00m$ exit
+
+Script done on 2019-11-11 22:31:24-0500

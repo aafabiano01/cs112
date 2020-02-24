@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item key="selection" value=""/>
+		<item key="wrap" value="true"/>
+		<item key="casesensitive" value="true"/>
+		<item key="wholeword" value="false"/>
+		<item key="incremental" value="false"/>
+		<item key="isRegEx" value="false"/>
+		<list key="findhistory">
+			<item value="stoi"/>
+			<item value="Re"/>
+			<item value="Appe"/>
+			<item value="appe"/>
+			<item value="constr"/>
+			<item value="2"/>
+			<item value="getSize()"/>
+			<item value="istream"/>
+			<item value="fstream"/>
+			<item value="getLine"/>
+			<item value="writeTo"/>
+			<item value="readFrom"/>
+			<item value="&lt;Vec Item&gt;"/>
+			<item value="&lt;class Item&gt;"/>
+			<item value="&lt;class item&gt;"/>
+		</list>
+		<list key="replacehistory">
+			<item value="Vec &lt;Item&gt;"/>
+			<item value="&lt;Vec Item&gt;"/>
+			<item value="&lt;class Item&gt;"/>
+			<item value="&lt;class item&gt;"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="47"/>
+		<item key="DIALOG_Y_ORIGIN" value="192"/>
+		<item key="DIALOG_WIDTH" value="322"/>
+		<item key="DIALOG_HEIGHT" value="407"/>
+		<item key="DIALOG_FONT_NAME" value="1|Noto Sans|9.0|0|GTK|1|"/>
+	</section>
+</section>

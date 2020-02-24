@@ -1,0 +1,12 @@
+13:14:18 **** Build of configuration Debug for project bubble sort ****
+make all 
+Building file: ../bubble_sort.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"bubble_sort.d" -MT"bubble_sort.o" -o "bubble_sort.o" "../bubble_sort.cpp"
+../bubble_sort.cpp:1:10: fatal error: tsal.hpp: No such file or directory
+ #include "tsal.hpp"
+subdir.mk:18: recipe for target 'bubble_sort.o' failed
+          ^~~~~~~~~~
+compilation terminated.
+make: *** [bubble_sort.o] Error 1
+"make all" terminated with exit code 2. Build might be incomplete.

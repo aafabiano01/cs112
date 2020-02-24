@@ -1,0 +1,35 @@
+20:10:52 **** Auto Build of configuration Debug for project lab07 ****
+make all 
+Building file: ../RPTester.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"RPTester.d" -MT"RPTester.o" -o "RPTester.o" "../RPTester.cpp"
+Finished building: ../RPTester.cpp
+ 
+Building file: ../ReversePoem.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"ReversePoem.d" -MT"ReversePoem.o" -o "ReversePoem.o" "../ReversePoem.cpp"
+Finished building: ../ReversePoem.cpp
+ 
+Building file: ../Stack.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"Stack.d" -MT"Stack.o" -o "Stack.o" "../Stack.cpp"
+Finished building: ../Stack.cpp
+ 
+Building file: ../StackTester.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"StackTester.d" -MT"StackTester.o" -o "StackTester.o" "../StackTester.cpp"
+Finished building: ../StackTester.cpp
+ 
+Building file: ../tester.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"tester.d" -MT"tester.o" -o "tester.o" "../tester.cpp"
+Finished building: ../tester.cpp
+ 
+Building target: lab07
+Invoking: GCC C++ Linker
+g++  -o "lab07"  ./RPTester.o ./ReversePoem.o ./Stack.o ./StackTester.o ./tester.o   
+Finished building target: lab07
+ 
+
+20:10:55 Build Finished. 0 errors, 0 warnings. (took 3s.628ms)
+

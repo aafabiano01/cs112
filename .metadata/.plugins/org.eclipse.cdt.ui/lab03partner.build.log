@@ -1,0 +1,15 @@
+09:06:02 **** Auto Build of configuration Debug for project lab03partner ****
+make all 
+Building file: ../VecTester.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"VecTester.d" -MT"VecTester.o" -o "VecTester.o" "../VecTester.cpp"
+Finished building: ../VecTester.cpp
+ 
+Building target: lab03partner
+Invoking: GCC C++ Linker
+g++  -o "lab03partner"  ./Vec.o ./VecTester.o ./VectorApplication.o ./tester.o   
+Finished building target: lab03partner
+ 
+
+09:06:04 Build Finished. 0 errors, 0 warnings. (took 1s.627ms)
+

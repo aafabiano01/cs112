@@ -1,0 +1,25 @@
+13:28:42 **** Incremental Build of configuration Debug for project lab11 ****
+make all 
+Building file: ../AccountManager.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"AccountManager.d" -MT"AccountManager.o" -o "AccountManager.o" "../AccountManager.cpp"
+Finished building: ../AccountManager.cpp
+ 
+Building file: ../manageUserAccounts.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"manageUserAccounts.d" -MT"manageUserAccounts.o" -o "manageUserAccounts.o" "../manageUserAccounts.cpp"
+Finished building: ../manageUserAccounts.cpp
+ 
+Building file: ../tester.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"tester.d" -MT"tester.o" -o "tester.o" "../tester.cpp"
+Finished building: ../tester.cpp
+ 
+Building target: lab11
+Invoking: GCC C++ Linker
+g++  -o "lab11"  ./AccountManager.o ./AccountManagerTester.o ./Menu.o ./MenuTester.o ./manageUserAccounts.o ./tester.o   
+Finished building target: lab11
+ 
+
+13:28:44 Build Finished. 0 errors, 0 warnings. (took 1s.488ms)
+
